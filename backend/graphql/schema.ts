@@ -1,20 +1,8 @@
-import { makeSchema } from "nexus";
-import { join } from "path";
+import { builder } from "./builder";
 
-export const schema = makeSchema({
-  types: [],
-  outputs: {
-    typegen: join(
-      process.cwd(),
-      'node_modules',
-      '@types',
-      'nexus-typegen',
-      'index.d.ts'
-    ),
-    schema: join(process.cwd(), 'graphql', 'schema.graphql'),
-  },
-  contextType: {
-    export: 'Context',
-    module: join(process.cwd(), 'graphql', 'context.ts'),
-  },
-});
+import "./types/User";
+import "./types/List";
+import "./types/ListComment";
+import "./types/ListItem";
+
+export const schema = builder.toSchema({});

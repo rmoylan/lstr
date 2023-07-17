@@ -5,6 +5,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator pothos {
+  provider = "prisma-pothos-types"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -30,15 +34,16 @@ enum ScaleType {
 
 model User {
   id String @id @default(uuid())
+  memberNumber Int @unique @default(autoincrement()) 
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
   email String @unique
   role Role @default(USER)
   lists List[]
-  comments Comment[]
-  votes Vote[]
-  setting Setting @relation(fields: [settingId], references: [id])
-  settingId String 
+  // comments Comment[]
+  // votes Vote[]
+  // setting Setting @relation(fields: [settingId], references: [id])
+  // settingId String 
 }
 
 model List {
@@ -50,18 +55,18 @@ model List {
   tags Tag[]
   author User @relation(fields: [authorId], references: [id])
   authorId String
-  privacy Privacy
+  // privacy Privacy
   genre Genre[]
-  scale Scale @relation(fields: [scaleId], references: [id])
-  scaleId String
-  comments Comment[]
+  // scale Scale @relation(fields: [scaleId], references: [id])
+  // scaleId String
+  comments ListComment[]
   votes Vote[]
 }
 
 model Setting {
   id String @id @default(uuid())
   privacy Privacy
-  users User[]
+  // users User[]
 }
 
 model ListItem {
@@ -69,27 +74,39 @@ model ListItem {
   name String
   list List @relation(fields: [listId], references: [id])
   listId String
-  comments Comment[]
-  rating Rating @relation(fields: [ratingId], references: [id])
-  ratingId String
+  comments ListItemComment[]
+  rating Float
+  // Rating @relation(fields: [ratingId], references: [id])
+  // ratingId String
 }
 
 model Vote {
   id String @id @default(uuid())
-  author User @relation(fields: [authorId], references: [id])
-  authorId String
+  // author User @relation(fields: [authorId], references: [id])
+  // authorId String
   list List @relation(fields: [listId], references: [id])
   listId String
 }
 
-model Comment {
+model ListComment {
   id String @id @default(uuid())
-  author User @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  // author User @relation(fields: [userId], references: [id])
   userId String
   list List @relation(fields: [listId], references: [id])
   listId String
+  message String
+}
+model ListItemComment {
+  id String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  // author User @relation(fields: [userId], references: [id])
+  userId String
   listItem ListItem @relation(fields: [listItemId], references: [id])
   listItemId String
+  message String
 }
 
 model Scale {
@@ -98,7 +115,7 @@ model Scale {
   max Float
   min Float
   type ScaleType
-  lists List[]
+  // lists List[]
 }
 
 model Genre {
@@ -107,11 +124,11 @@ model Genre {
   lists List[]
 }
 
-model Rating {
-  id String @id @default(uuid())
-  listItem ListItem[]
-  value Float
-}
+// model Rating {
+//   id String @id @default(uuid())
+//   listItem ListItem[]
+//   value Float
+// }
 
 model Tag {
   id String @id @default(uuid())
