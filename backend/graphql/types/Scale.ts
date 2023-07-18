@@ -1,19 +1,20 @@
 import { builder } from "../builder";
 import prisma from "../../lib/prisma";
 
-builder.prismaObject("ListItem", {
+builder.prismaObject("Scale", {
   fields: (t) => ({
     id: t.exposeID("id"),
     name: t.exposeString("name"),
-    list: t.relation("list"),
-    rating: t.exposeFloat("rating"),
+    max: t.exposeFloat("max"),
+    min: t.exposeFloat("min"),
+    type: t.exposeString("type"),
   }),
 });
 
-builder.queryField("ListItem", (t) =>
+builder.queryField("Scale", (t) =>
   t.prismaField({
-    type: ["ListItem"],
+    type: ["Scale"],
     resolve: async (query, root, args, ctx, info) =>
-      prisma.listItem.findMany({ ...query }),
+      prisma.scale.findMany({ ...query }),
   })
 );

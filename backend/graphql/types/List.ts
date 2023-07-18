@@ -16,6 +16,7 @@ builder.prismaObject("List", {
     author: t.relation("author"),
     comments: t.relation("comments"),
     items: t.relation("items"),
+    scale: t.relation("scale"),
     // authorId: t.exposeString('authorId'),
 
     // author: t.relation('author', {

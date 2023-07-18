@@ -11,16 +11,24 @@ async function main() {
   const user = await prisma.user.create({
     data: {
       email: "test@test.com",
-      lists: {
-        create: [
-          {
-            name: "list one",
-          },
-          {
-            name: "list two",
-          },
-        ],
-      },
+      // lists: {
+      //   create: [
+      //     {
+      //       name: "list one",
+      //     },
+      //     {
+      //       name: "list two",
+      //     },
+      //   ],
+      // },
+    },
+  });
+
+  const scale = await prisma.scale.create({
+    data: {
+      name: "precise",
+      min: 0,
+      max: 1,
     },
   });
 
@@ -28,6 +36,7 @@ async function main() {
     data: {
       authorId: user.id,
       name: "List Three",
+      scaleId: scale.id,
     },
   });
 
@@ -47,7 +56,7 @@ async function main() {
     },
   });
 
-  console.log({ user, list, listComment, listItem });
+  console.log({ user, scale, list, listComment, listItem });
 }
 
 main()

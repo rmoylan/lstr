@@ -55,10 +55,10 @@ model List {
   tags Tag[]
   author User @relation(fields: [authorId], references: [id])
   authorId String
-  // privacy Privacy
+  privacy Privacy @default(PRIVATE)
   genre Genre[]
-  // scale Scale @relation(fields: [scaleId], references: [id])
-  // scaleId String
+  scale Scale @relation(fields: [scaleId], references: [id])
+  scaleId String
   comments ListComment[]
   votes Vote[]
 }
@@ -114,8 +114,8 @@ model Scale {
   name String
   max Float
   min Float
-  type ScaleType
-  // lists List[]
+  type ScaleType @default(PRECISE)
+  lists List[]
 }
 
 model Genre {
