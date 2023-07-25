@@ -1,6 +1,12 @@
 import { builder } from "../builder";
 import prisma from "../../lib/prisma";
 
+const CreateUserInput = builder.inputType("CreateUserInput", {
+  fields: (t) => ({
+    email: t.string({ required: true }),
+  }),
+});
+
 builder.prismaObject("User", {
   fields: (t) => ({
     id: t.exposeID("id"),
@@ -28,18 +34,12 @@ builder.queryField("users", (t) =>
   })
 );
 
-const UserCreateInput = builder.inputType("UserCreateInput", {
-  fields: (t) => ({
-    email: t.string({ required: true }),
-  }),
-});
-
 builder.mutationField("createUser", (t) =>
   t.prismaField({
     type: "User",
     nullable: true,
     args: {
-      input: t.arg({ type: UserCreateInput, required: true }),
+      input: t.arg({ type: CreateUserInput, required: true }),
     },
     errors: {
       types: [Error],
@@ -62,3 +62,5 @@ builder.mutationField("createUser", (t) =>
     },
   })
 );
+
+export { CreateUserInput };

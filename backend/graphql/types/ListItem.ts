@@ -1,6 +1,12 @@
 import { builder } from "../builder";
 import prisma from "../../lib/prisma";
 
+const CreateListItemInput = builder.inputType("CreateListItemInput", {
+  fields: (t) => ({
+    name: t.string({ required: true }),
+  }),
+});
+
 builder.prismaObject("ListItem", {
   fields: (t) => ({
     id: t.exposeID("id"),
@@ -18,3 +24,5 @@ builder.queryField("ListItem", (t) =>
       prisma.listItem.findMany({ ...query }),
   })
 );
+
+export { CreateListItemInput };

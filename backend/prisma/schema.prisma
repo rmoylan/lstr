@@ -77,7 +77,7 @@ model ListItem {
   list List @relation(fields: [listId], references: [id])
   listId String
   listItemComments ListItemComment[]
-  rating Float
+  rating Float @default(0)
   // Rating @relation(fields: [ratingId], references: [id])
   // ratingId String
 }
