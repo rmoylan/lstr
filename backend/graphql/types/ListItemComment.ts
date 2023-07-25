@@ -1,7 +1,7 @@
 import { builder } from "../builder";
 import prisma from "../../lib/prisma";
 
-builder.prismaObject("ListComment", {
+builder.prismaObject("ListItemComment", {
   fields: (t) => ({
     id: t.exposeID("id"),
     createdAt: t.expose("createdAt", {
@@ -10,16 +10,16 @@ builder.prismaObject("ListComment", {
     updatedAt: t.expose("updateAt", {
       type: "Date",
     }),
-    userId: t.exposeString("userId"),
-    listId: t.exposeString("listId"),
+    author: t.relation("author"),
+    listItem: t.relation("listItem"),
     message: t.exposeString("message"),
   }),
 });
 
-builder.queryField("listComments", (t) =>
+builder.queryField("listItemComments", (t) =>
   t.prismaField({
-    type: ["ListComment"],
+    type: ["ListItemComment"],
     resolve: async (query, root, args, ctx, info) =>
-      prisma.listComment.findMany({ ...query }),
+      prisma.listItemComment.findMany({ ...query }),
   })
 );

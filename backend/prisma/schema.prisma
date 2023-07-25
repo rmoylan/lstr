@@ -40,8 +40,9 @@ model User {
   email String @unique
   role Role @default(USER)
   lists List[]
-  // comments Comment[]
-  // votes Vote[]
+  listComments ListComment[]
+  listItemComments ListItemComment[]
+  votes Vote[]
   // setting Setting @relation(fields: [settingId], references: [id])
   // settingId String 
 }
@@ -63,6 +64,7 @@ model List {
   votes Vote[]
 }
 
+// not implemented
 model Setting {
   id String @id @default(uuid())
   privacy Privacy
@@ -74,7 +76,7 @@ model ListItem {
   name String
   list List @relation(fields: [listId], references: [id])
   listId String
-  comments ListItemComment[]
+  listItemComments ListItemComment[]
   rating Float
   // Rating @relation(fields: [ratingId], references: [id])
   // ratingId String
@@ -82,8 +84,9 @@ model ListItem {
 
 model Vote {
   id String @id @default(uuid())
-  // author User @relation(fields: [authorId], references: [id])
-  // authorId String
+  author User @relation(fields: [authorId], references: [id])
+  value Float
+  authorId String
   list List @relation(fields: [listId], references: [id])
   listId String
 }
@@ -92,17 +95,19 @@ model ListComment {
   id String @id @default(uuid())
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
-  // author User @relation(fields: [userId], references: [id])
+  author User @relation(fields: [userId], references: [id])
   userId String
   list List @relation(fields: [listId], references: [id])
   listId String
   message String
 }
+
+// not implemented
 model ListItemComment {
   id String @id @default(uuid())
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
-  // author User @relation(fields: [userId], references: [id])
+  author User @relation(fields: [userId], references: [id])
   userId String
   listItem ListItem @relation(fields: [listItemId], references: [id])
   listItemId String
@@ -118,6 +123,7 @@ model Scale {
   lists List[]
 }
 
+// not implemented
 model Genre {
   id String @id @default(uuid())
   name String
@@ -130,6 +136,7 @@ model Genre {
 //   value Float
 // }
 
+// not implemented
 model Tag {
   id String @id @default(uuid())
   lists List[]

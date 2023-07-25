@@ -7,6 +7,7 @@ builder.prismaObject("ListItem", {
     name: t.exposeString("name"),
     list: t.relation("list"),
     rating: t.exposeFloat("rating"),
+    comments: t.relation("listItemComments"),
   }),
 });
 

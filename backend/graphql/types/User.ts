@@ -1,8 +1,5 @@
 import { builder } from "../builder";
 import prisma from "../../lib/prisma";
-// import { PrismaClient } from "../prisma/client";
-
-// export const db = new PrismaClient();
 
 builder.prismaObject("User", {
   fields: (t) => ({
@@ -17,23 +14,9 @@ builder.prismaObject("User", {
     email: t.exposeString("email"),
     role: t.exposeString("role"),
     lists: t.relation("lists"),
-    // lists: t.relation("lists", {
-    //   args: {
-    //     oldestFirst: t.arg.boolean(),
-    //   },
-    //   // Define custom query options that are applied when
-    //   // loading the post relation
-    //   query: (args, context) => ({
-    //     orderBy: {
-    //       createdAt: args.oldestFirst ? "asc" : "desc",
-    //     },
-    //   }),
-    // }),
-
-    // comments:
-    // votes:
-    // setting:
-    // settingId
+    listComments: t.relation("listComments"),
+    listItemComments: t.relation("listItemComments"),
+    votes: t.relation("votes"),
   }),
 });
 
@@ -45,19 +28,44 @@ builder.queryField("users", (t) =>
   })
 );
 
-// builder.queryType({
-//   fields: (t) => ({
-//     user: t.prismaField({
-//       type: "User",
-//       nullable: true,
-//       args: {
-//         id: t.arg.id({ required: true }),
-//       },
-//       resolve: (query, root, args) =>
-//         db.user.findUnique({
-//           ...query,
-//           where: { id: Number.parseInt(String(args.id), 10) },
-//         }),
-//     }),
-//   }),
-// });
+const UserCreateInput = builder.inputType("UserCreateInput", {
+  fields: (t) => ({
+    email: t.string({ required: true }),
+  }),
+});
+
+builder.objectType(Error, {
+  name: "Error",
+  fields: (t) => ({
+    message: t.exposeString("message"),
+  }),
+});
+
+builder.mutationField("createUser", (t) =>
+  t.prismaField({
+    type: "User",
+    nullable: true,
+    args: {
+      input: t.arg({ type: UserCreateInput, required: true }),
+    },
+    errors: {
+      types: [Error],
+    },
+    resolve: async (query, _, { input }) => {
+      const user = await prisma.user.findUnique({
+        where: {
+          email: input.email,
+        },
+      });
+
+      if (user) throw new Error("User already exists");
+
+      return prisma.user.create({
+        ...query,
+        data: {
+          email: input.email,
+        },
+      });
+    },
+  })
+);

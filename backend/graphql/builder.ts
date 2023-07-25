@@ -1,5 +1,6 @@
 import SchemaBuilder from "@pothos/core";
 import PrismaPlugin from "@pothos/plugin-prisma";
+import ErrorsPlugin from "@pothos/plugin-errors";
 import type PrismaTypes from "@pothos/plugin-prisma/generated";
 import { DateResolver } from "graphql-scalars";
 import prisma from "../lib/prisma";
@@ -19,9 +20,12 @@ export const builder = new SchemaBuilder<{
     };
   };
 }>({
-  plugins: [PrismaPlugin],
+  plugins: [PrismaPlugin, ErrorsPlugin],
   prisma: {
     client: prisma,
+  },
+  errorOptions: {
+    defaultTypes: [],
   },
 });
 
@@ -31,10 +35,6 @@ builder.enumType(Role, {
 
 builder.addScalarType("Date", DateResolver, {});
 
-builder.queryType({
-  // fields: (t) => ({
-  //   ok: t.boolean({
-  //     resolve: () => true,
-  //   }),
-  // }),
-});
+builder.queryType({});
+
+builder.mutationType();
