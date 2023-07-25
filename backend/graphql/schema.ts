@@ -1,5 +1,6 @@
 import { builder } from "./builder";
 
+import "./types/Error";
 import "./types/User";
 import "./types/List";
 import "./types/ListComment";

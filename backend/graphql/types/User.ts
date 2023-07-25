@@ -34,13 +34,6 @@ const UserCreateInput = builder.inputType("UserCreateInput", {
   }),
 });
 
-builder.objectType(Error, {
-  name: "Error",
-  fields: (t) => ({
-    message: t.exposeString("message"),
-  }),
-});
-
 builder.mutationField("createUser", (t) =>
   t.prismaField({
     type: "User",
