@@ -11,6 +11,12 @@ const CreateListInput = builder.inputType("CreateListInput", {
   }),
 });
 
+const QueryUserListsInput = builder.inputType("QueryUserListsInput", {
+  fields: (t) => ({
+    authorId: t.string({ required: true }),
+  }),
+});
+
 builder.prismaObject("List", {
   fields: (t) => ({
     id: t.exposeID("id"),
@@ -30,13 +36,33 @@ builder.prismaObject("List", {
   }),
 });
 
-builder.queryField("list", (t) =>
-  t.prismaField({
+builder.queryFields((t) => ({
+  allLists: t.prismaField({
     type: ["List"],
     resolve: async (query, root, args, ctx, info) =>
       prisma.list.findMany({ ...query }),
-  })
-);
+  }),
+  userLists: t.prismaField({
+    type: ["List"],
+    args: {
+      input: t.arg({ type: QueryUserListsInput, required: true }),
+    },
+    nullable: true,
+    errors: {
+      types: [Error],
+    },
+    resolve: (query, _, { input: { authorId } }) => {
+      if (!authorId) throw new Error("Please provide an authorId");
+
+      return prisma.list.findMany({
+        ...query,
+        where: {
+          authorId,
+        },
+      });
+    },
+  }),
+}));
 
 builder.mutationField("createList", (t) =>
   t.prismaField({

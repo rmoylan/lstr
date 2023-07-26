@@ -95,20 +95,19 @@ model ListComment {
   id String @id @default(uuid())
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
-  author User @relation(fields: [userId], references: [id])
-  userId String
+  author User @relation(fields: [authorId], references: [id])
+  authorId String
   list List @relation(fields: [listId], references: [id])
   listId String
   message String
 }
 
-// not implemented
 model ListItemComment {
   id String @id @default(uuid())
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
-  author User @relation(fields: [userId], references: [id])
-  userId String
+  author User @relation(fields: [authorId], references: [id])
+  authorId String
   listItem ListItem @relation(fields: [listItemId], references: [id])
   listItemId String
   message String

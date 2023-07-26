@@ -33,7 +33,7 @@ async function main() {
 
   const listComment = await prisma.listComment.create({
     data: {
-      userId: user.id,
+      authorId: user.id,
       message: "List three is good",
       listId: list.id,
     },
