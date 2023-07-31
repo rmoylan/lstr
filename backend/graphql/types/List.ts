@@ -155,7 +155,6 @@ builder.mutationFields((t) => ({
       });
 
       const listItemsIds = listItems.map((item) => item.id);
-      console.log("🚀 ~ file: List.ts:129 ~ listItemsIds:", { listItemsIds });
 
       // prisma.$transaction(async (prisma) => {
       //   items?.forEach(async (item) => {
@@ -174,66 +173,66 @@ builder.mutationFields((t) => ({
       //     }
       //   });
       // });
-      if (items) {
-        prisma.$transaction(
-          // items.map(async (item) => {
-          //   const itemId = item.id || null;
-          //   const itemExists = itemId ? listItemsIds.includes(itemId) : "";
-          //   if (itemId && itemExists)
-          //     return await prisma.listItem.update({
-          //       where: {
-          //         id: itemId,
-          //       },
-          //       data: {
-          //         ...item,
-          //       },
-          //     });
+      // if (items) {
+      //   prisma.$transaction(
+      //     // items.map(async (item) => {
+      //     //   const itemId = item.id || null;
+      //     //   const itemExists = itemId ? listItemsIds.includes(itemId) : "";
+      //     //   if (itemId && itemExists)
+      //     //     return await prisma.listItem.update({
+      //     //       where: {
+      //     //         id: itemId,
+      //     //       },
+      //     //       data: {
+      //     //         ...item,
+      //     //       },
+      //     //     });
 
-          //   return await prisma.listItem.create({
-          //     data: {
-          //       listId: list.id,
-          //       ...item,
-          //     },
-          //   });
-          items.map((item) => {
-            return prisma.listItem.upsert({
-              where: { id: item.id || "" },
-              update: {
-                ...item,
-                // listId: list.id,
-              },
-              create: {
-                ...item,
-                listId: list.id,
-              },
-            });
-          })
-        );
-        // );
-        // prisma.$transaction(async (prisma) => {
-        //   try {
-        //     // for (let i = 0; i < items.length; i++) {
-        //       for (let item of items) {
-        //       // const item = items[i];
-        //       console.log(
-        //         "🚀 ~ file: List.ts:152 ~ prisma.$transaction ~ item:",
-        //         { item }
-        //       );
-        //       await prisma.listItem.upsert({
-        //         where: { id: item.id },
-        //         update: {
-        //           ...item,
-        //         },
-        //         create: {
-        //           ...item,
-        //         },
-        //       });
-        //     }
-        //   } catch {
-        //     throw new Error("Could not update items");
-        //   }
-        // });
-      }
+      //     //   return await prisma.listItem.create({
+      //     //     data: {
+      //     //       listId: list.id,
+      //     //       ...item,
+      //     //     },
+      //     //   });
+      //     items.map((item) => {
+      //       return prisma.listItem.upsert({
+      //         where: { id: item.id  },
+      //         update: {
+      //           ...item,
+      //           // listId: list.id,
+      //         },
+      //         create: {
+      //           ...item,
+      //           listId: list.id,
+      //         },
+      //       });
+      //     })
+      //   );
+      //   // );
+      //   // prisma.$transaction(async (prisma) => {
+      //   //   try {
+      //   //     // for (let i = 0; i < items.length; i++) {
+      //   //       for (let item of items) {
+      //   //       // const item = items[i];
+      //   //       console.log(
+      //   //         "🚀 ~ file: List.ts:152 ~ prisma.$transaction ~ item:",
+      //   //         { item }
+      //   //       );
+      //   //       await prisma.listItem.upsert({
+      //   //         where: { id: item.id },
+      //   //         update: {
+      //   //           ...item,
+      //   //         },
+      //   //         create: {
+      //   //           ...item,
+      //   //         },
+      //   //       });
+      //   //     }
+      //   //   } catch {
+      //   //     throw new Error("Could not update items");
+      //   //   }
+      //   // });
+      // }
 
       return prisma.list.update({
         ...query,
@@ -242,6 +241,27 @@ builder.mutationFields((t) => ({
         },
         data: {
           name: rest.name ? rest.name : list.name,
+          items: {
+            upsert: items?.map((item) => ({
+              where: {
+                id: item.id || "",
+              },
+              create: {
+                ...item,
+              },
+              update: {
+                ...item,
+              },
+            })),
+            // connectOrCreate: items?.map((item) => ({
+            //   where: {
+            //     id: item.id || "",
+            //   },
+            //   create: {
+            //     ...item,
+            //   },
+            // })),
+          },
         },
       });
     },
