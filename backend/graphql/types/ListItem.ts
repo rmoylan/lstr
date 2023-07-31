@@ -4,6 +4,15 @@ import prisma from "../../lib/prisma";
 const CreateListItemInput = builder.inputType("CreateListItemInput", {
   fields: (t) => ({
     name: t.string({ required: true }),
+    rating: t.float(),
+  }),
+});
+
+const UpdateListItemInput = builder.inputType("UpdateListItemInput", {
+  fields: (t) => ({
+    id: t.string(),
+    name: t.string({ required: true }),
+    rating: t.float({ required: true }),
   }),
 });
 
@@ -25,4 +34,4 @@ builder.queryField("ListItem", (t) =>
   })
 );
 
-export { CreateListItemInput };
+export { CreateListItemInput, UpdateListItemInput };
