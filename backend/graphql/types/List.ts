@@ -143,96 +143,12 @@ builder.mutationFields((t) => ({
     resolve: async (
       query,
       root,
-      { input: { id, items, ...rest } },
+      { input: { id, items, name, ...rest } },
       ctx,
       info
     ) => {
       const list = await prisma.list.findUnique({ where: { id } });
       if (!list) throw Error(`Could not find the list with id ${id}`);
-
-      const listItems = await prisma.listItem.findMany({
-        where: { listId: list.id },
-      });
-
-      const listItemsIds = listItems.map((item) => item.id);
-
-      // prisma.$transaction(async (prisma) => {
-      //   items?.forEach(async (item) => {
-      //     try {
-      //       await prisma.listItem.upsert({
-      //         where: {
-      //           id,
-      //         },
-      //         update: {
-      //           ...item,
-      //         },
-      //         create: {
-      //           ...item,
-      //         },
-      //       });
-      //     }
-      //   });
-      // });
-      // if (items) {
-      //   prisma.$transaction(
-      //     // items.map(async (item) => {
-      //     //   const itemId = item.id || null;
-      //     //   const itemExists = itemId ? listItemsIds.includes(itemId) : "";
-      //     //   if (itemId && itemExists)
-      //     //     return await prisma.listItem.update({
-      //     //       where: {
-      //     //         id: itemId,
-      //     //       },
-      //     //       data: {
-      //     //         ...item,
-      //     //       },
-      //     //     });
-
-      //     //   return await prisma.listItem.create({
-      //     //     data: {
-      //     //       listId: list.id,
-      //     //       ...item,
-      //     //     },
-      //     //   });
-      //     items.map((item) => {
-      //       return prisma.listItem.upsert({
-      //         where: { id: item.id  },
-      //         update: {
-      //           ...item,
-      //           // listId: list.id,
-      //         },
-      //         create: {
-      //           ...item,
-      //           listId: list.id,
-      //         },
-      //       });
-      //     })
-      //   );
-      //   // );
-      //   // prisma.$transaction(async (prisma) => {
-      //   //   try {
-      //   //     // for (let i = 0; i < items.length; i++) {
-      //   //       for (let item of items) {
-      //   //       // const item = items[i];
-      //   //       console.log(
-      //   //         "🚀 ~ file: List.ts:152 ~ prisma.$transaction ~ item:",
-      //   //         { item }
-      //   //       );
-      //   //       await prisma.listItem.upsert({
-      //   //         where: { id: item.id },
-      //   //         update: {
-      //   //           ...item,
-      //   //         },
-      //   //         create: {
-      //   //           ...item,
-      //   //         },
-      //   //       });
-      //   //     }
-      //   //   } catch {
-      //   //     throw new Error("Could not update items");
-      //   //   }
-      //   // });
-      // }
 
       return prisma.list.update({
         ...query,
@@ -240,7 +156,7 @@ builder.mutationFields((t) => ({
           id,
         },
         data: {
-          name: rest.name ? rest.name : list.name,
+          name: name ? name : list.name,
           items: {
             upsert: items?.map((item) => ({
               where: {
@@ -253,38 +169,10 @@ builder.mutationFields((t) => ({
                 ...item,
               },
             })),
-            // connectOrCreate: items?.map((item) => ({
-            //   where: {
-            //     id: item.id || "",
-            //   },
-            //   create: {
-            //     ...item,
-            //   },
-            // })),
           },
         },
       });
     },
-    // resolve: (query, _, { input}) =>
-    // resolve: (query, root, {input, ...rest}, ctx, info) => {
-    //   console.log({query, root, ctx, info});
-    //   return prisma.list.update({
-    //     ...query,
-    //     where: {
-    //       id: input.id ,
-    //     },
-    //     data: {
-    //       name: input.name? input.name : '',
-    //       // players: {
-    //       //   create: input.players.map((player) => ({
-    //       //     name: player.name,
-    //       //     number: player.number,
-    //       //   })),
-    //       // },
-    //     },
-    //   }),
-
-    // }
   }),
 }));
 

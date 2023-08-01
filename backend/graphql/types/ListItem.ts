@@ -11,8 +11,8 @@ const CreateListItemInput = builder.inputType("CreateListItemInput", {
 const UpdateListItemInput = builder.inputType("UpdateListItemInput", {
   fields: (t) => ({
     id: t.string(),
-    name: t.string({ required: true }),
-    rating: t.float({ required: true }),
+    name: t.string(),
+    rating: t.float(),
   }),
 });
 
