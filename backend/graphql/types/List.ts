@@ -158,6 +158,8 @@ builder.mutationFields((t) => ({
         data: {
           name: name ? name : list.name,
           items: {
+            // TODO: look into using different inputs for upsert when describing create and update
+            // @ts-ignore
             upsert: items?.map((item) => ({
               where: {
                 id: item.id || "",
