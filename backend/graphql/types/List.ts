@@ -17,7 +17,9 @@ const UpdateListInput = builder.inputType("UpdateListInput", {
     name: t.string(),
     authorId: t.string(),
     scaleId: t.string(),
-    items: t.field({ type: [UpdateListItemInput] }),
+    // items: t.field({
+    //   type: [UpdateListItemInput],
+    // }),
   }),
 });
 
@@ -140,13 +142,7 @@ builder.mutationFields((t) => ({
     errors: {
       types: [Error],
     },
-    resolve: async (
-      query,
-      root,
-      { input: { id, items, name, ...rest } },
-      ctx,
-      info
-    ) => {
+    resolve: async (query, root, { input: { id, name } }, ctx, info) => {
       const list = await prisma.list.findUnique({ where: { id } });
       if (!list) throw Error(`Could not find the list with id ${id}`);
 
@@ -157,21 +153,21 @@ builder.mutationFields((t) => ({
         },
         data: {
           name: name ? name : list.name,
-          items: {
-            // TODO: look into using different inputs for upsert when describing create and update
-            // @ts-ignore
-            upsert: items?.map((item) => ({
-              where: {
-                id: item.id || "",
-              },
-              create: {
-                ...item,
-              },
-              update: {
-                ...item,
-              },
-            })),
-          },
+          // items: {
+          //   // TODO: look into using different inputs for upsert when describing create and update
+          //   // @ts-ignore
+          //   upsert: items?.map((item) => ({
+          //     where: {
+          //       id: item.id ?? undefined,
+          //     },
+          //     update: {
+          //       ...item,
+          //     },
+          //     create: {
+          //       ...item,
+          //     },
+          //   })),
+          // },
         },
       });
     },

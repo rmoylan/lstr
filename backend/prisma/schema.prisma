@@ -51,6 +51,7 @@ model List {
   id String @id @default(uuid())
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
+  deleted Boolean @default(false)
   name String
   items ListItem[]
   tags Tag[]
